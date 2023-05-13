@@ -1,3 +1,6 @@
+[![Docker Image CI](https://github.com/tiwarishrijan/prestodb/actions/workflows/docker_build.yml/badge.svg?branch=main)](https://github.com/tiwarishrijan/prestodb/actions/workflows/docker_build.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # Presto DB
 
 ## Required tools
