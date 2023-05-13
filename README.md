@@ -6,23 +6,14 @@
 - htpasswd
 - kubectl
 - kubernetes cluster
+- Java
 
-## Docker image
+## Existing Docker image
 
 | Images            | Tags   |
 | ----------------- | ------ |
 | lumenore/prestodb | latest |
 | lumenore/prestodb | 0.281  |
-
-## Build your own image
-
-```bash
-PRESTO_VERSION=0.281
-DOCKER_REPO="lumenore/prestodb"
-
-docker build --build-arg PRESTO_VERSION=${PRESTO_VERSION} . -t ${DOCKER_REPO}:${PRESTO_VERSION}
-docker push ${DOCKER_REPO}:${PRESTO_VERSION}
-```
 
 ## Generate password
 
@@ -136,10 +127,48 @@ spec:
 EOF
 ```
 
-## Connect
+## Connect using CLI from cluster
 
-You can connect with presto-cli withing cluster over port 8080.
+You can connect with presto-cli within cluster over port 8080.
 
 ```bash
 presto --server https://presto-db:8080 --user <USERNAME>  --password
+```
+
+## Connect using JDBC from cluster
+
+You can connect with presto-jdbc driver within cluster over port 8080. You can refer options from [here](https://prestodb.io/docs/current/installation/jdbc.html)
+
+```
+jdbc:presto://presto-db:8080/<catalog>/<schema>?SSL=true&SSLKeyStorePath=<presto-db.jks path>&SSLKeyStorePassword=<changeit>&SSLTrustStorePath=<presto-db.jks path>&SSLTrustStorePassword=<changeit>
+```
+
+## Import JKS store (Optional)
+
+Import JKS store
+
+```bash
+DESTINATION_STORE=${JAVA_HOME}/lib/security/cacerts
+
+keytool -importkeystore -srckeystore presto-db.jks -destkeystore ${DESTINATION_STORE} -srcstorepass changeit -deststorepass changeit -noprompt
+```
+
+## TLS Certificate generation (Optional)
+
+Generate your own TLS Certificate
+
+```bash
+keytool -genkeypair -alias presto-db -keypass changeit -storepass changeit -keyalg RSA -keystore presto-db.jks -keysize 2048 -storetype JKS -dname "CN=presto-db, OU=Lumenore, O=Unknown, L=Unknown, ST=MP, C=IN"
+```
+
+## Build your own image (Optional)
+
+You can build your own docker image from here, Just make sure you change the image in deployment :)
+
+```bash
+PRESTO_VERSION=0.281
+DOCKER_REPO="lumenore/prestodb"
+
+docker build --build-arg PRESTO_VERSION=${PRESTO_VERSION} . -t ${DOCKER_REPO}:${PRESTO_VERSION}
+docker push ${DOCKER_REPO}:${PRESTO_VERSION}
 ```

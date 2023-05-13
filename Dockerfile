@@ -3,7 +3,8 @@ FROM --platform=linux/amd64 openjdk:8-jre
 RUN mkdir -p /opt
 RUN apt-get update &&  apt-get install -y wget python less
 
-RUN keytool -genkeypair -alias presto-db -keypass changeit -storepass changeit -keyalg RSA -keystore ${JAVA_HOME}/lib/security/cacerts -keysize 2048 -storetype JKS -dname "CN=presto-db, OU=Lumenore, O=Unknown, L=Unknown, ST=MP, C=IN"
+COPY presto-db.jks /tmp
+RUN keytool -importkeystore -srckeystore /tmp/presto-db.jks -destkeystore ${JAVA_HOME}/lib/security/cacerts -srcstorepass changeit -deststorepass changeit -noprompt
 
 ARG PRESTO_VERSION
 
