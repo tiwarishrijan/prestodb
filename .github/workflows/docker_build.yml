@@ -45,4 +45,4 @@ jobs:
           cache-to: type=inline
           tags: ${{ env.DOCKER_REPO }}:${{ env.PRESTO_VERSION }},${{ env.DOCKER_REPO }}:latest
           build-args: |
-            PRESTO_VERSION: ${{ env.PRESTO_VERSION }}
+            PRESTO_VERSION=${{ env.PRESTO_VERSION }}
